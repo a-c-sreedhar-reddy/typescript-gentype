@@ -1,0 +1,14 @@
+rescript = 1
+cleaner = /Users/acsreedharreddy/rescript/typescript-app/node_modules/gentype/gentype.exe
+rule astj
+  command = /Users/acsreedharreddy/rescript/typescript-app/node_modules/rescript/darwin/bsc.exe  -bs-v 9.1.4  -absname -bs-ast -o $out $i
+o src/Test.ast : astj ../../src/Test.res
+rule deps
+  command = /Users/acsreedharreddy/rescript/typescript-app/node_modules/rescript/darwin/bsb_helper.exe -hash 7b18d7bf88188ea959648ad886c6913a $in
+  restat = 1
+o src/Test.d : deps src/Test.ast
+rule mij
+  command = /Users/acsreedharreddy/rescript/typescript-app/node_modules/rescript/darwin/bsc.exe -I src   -bs-gentype /Users/acsreedharreddy/rescript/typescript-app/node_modules/gentype/gentype.exe -bs-package-name your-project-name -bs-package-output es6:$in_d:.bs.js $i
+  dyndep = 1
+  restat = 1
+o src/Test.cmj src/Test.cmi ../../src/Test.bs.js : mij src/Test.ast
